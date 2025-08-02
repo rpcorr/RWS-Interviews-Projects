@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import projectDataRaw from './data.json'; // Raw import
+import projectDataRaw from './data.json';
 
 interface ProjectInfo {
   projSerialNumber: string;
@@ -12,7 +12,7 @@ interface ProjectInfo {
 // Type assertion
 const projectData = projectDataRaw as ProjectInfo[];
 
-export function App(props: { status: 'A' | 'B' | 'C' | 'D' }) {
+export function App() {
   const [projects, setProjects] = useState<ProjectInfo[]>(projectData);
   const [filter, setFilter] = useState('');
   const [filteredProjects, setFilteredProjects] = useState<ProjectInfo[]>([]);
@@ -27,7 +27,7 @@ export function App(props: { status: 'A' | 'B' | 'C' | 'D' }) {
         project.name.toLowerCase().includes(filter.toLowerCase())
       )
     );
-  }, [filter, projects]); // ✅ also fixed dependency array
+  }, [filter, projects]);
 
   const renderTable = (status: string) => {
     const projectsByStatus = filteredProjects.filter(
@@ -35,32 +35,37 @@ export function App(props: { status: 'A' | 'B' | 'C' | 'D' }) {
     );
 
     if (projectsByStatus.length === 0) {
-      return <p>No projects found with status "{status}".</p>;
+      return <p key={status}>No projects found with status "{status}".</p>;
     }
 
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Serial Number</th>
-            <th>Job Number</th>
-            <th>Name</th>
-            <th>Contractor</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projectsByStatus.map((project) => (
-            <tr key={project.projSerialNumber}>
-              <td>{project.projSerialNumber}</td>
-              <td>{project.jobNumber}</td>
-              <td>{project.name}</td>
-              <td>{project.contractor}</td>
+      <div key={status}>
+        <h2>Status: {status}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Serial Number</th>
+              <th>Job Number</th>
+              <th>Name</th>
+              <th>Contractor</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {projectsByStatus.map((project) => (
+              <tr key={project.projSerialNumber}>
+                <td>{project.projSerialNumber}</td>
+                <td>{project.jobNumber}</td>
+                <td>{project.name}</td>
+                <td>{project.contractor}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   };
+
+  const statuses: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
 
   return (
     <div className="App">
@@ -68,10 +73,9 @@ export function App(props: { status: 'A' | 'B' | 'C' | 'D' }) {
         type="text"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        placeholder="Filter projects"
+        placeholder="Filter projects by name"
       />
-      <h2>Status: {props.status}</h2>
-      {renderTable(props.status)}
+      {statuses.map((status) => renderTable(status))}
     </div>
   );
 }
