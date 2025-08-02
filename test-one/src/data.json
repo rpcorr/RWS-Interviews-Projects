@@ -1,0 +1,37 @@
+[
+  {
+    "projSerialNumber": "PSN001",
+    "jobNumber": "JN1001",
+    "name": "Main Street Bridge",
+    "contractor": "Alpha Construction",
+    "status": "A"
+  },
+  {
+    "projSerialNumber": "PSN002",
+    "jobNumber": "JN1002",
+    "name": "Downtown Highrise",
+    "contractor": "Bravo Builders",
+    "status": "B"
+  },
+  {
+    "projSerialNumber": "PSN003",
+    "jobNumber": "JN1003",
+    "name": "Airport Expansion",
+    "contractor": "Skyline Developments",
+    "status": "C"
+  },
+  {
+    "projSerialNumber": "PSN004",
+    "jobNumber": "JN1004",
+    "name": "Riverbank Cleanup",
+    "contractor": "EcoSolutions Inc.",
+    "status": "D"
+  },
+  {
+    "projSerialNumber": "PSN005",
+    "jobNumber": "JN1005",
+    "name": "Suburban School Build",
+    "contractor": "Delta Contracting",
+    "status": "A"
+  }
+]
