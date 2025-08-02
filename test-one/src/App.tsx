@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-
-// An array of objects following ProjectInfo interface
-import projectData from './data.json' 
+import { useState, useEffect } from 'react';
+import projectDataRaw from './data.json'; // Raw import
 
 interface ProjectInfo {
-    projSerialNumber: string;
-    jobNumber: string;
-    name: string;
-    contractor: string;
-    status: 'A' | 'B' | 'C' | 'D';
+  projSerialNumber: string;
+  jobNumber: string;
+  name: string;
+  contractor: string;
+  status: 'A' | 'B' | 'C' | 'D';
 }
 
-export function App(props) {
+// Type assertion
+const projectData = projectDataRaw as ProjectInfo[];
+
+export function App(props: { status: 'A' | 'B' | 'C' | 'D' }) {
   const [projects, setProjects] = useState<ProjectInfo[]>(projectData);
   const [filter, setFilter] = useState('');
   const [filteredProjects, setFilteredProjects] = useState<ProjectInfo[]>([]);
@@ -21,12 +22,22 @@ export function App(props) {
   }, []);
 
   useEffect(() => {
-    setFilteredProjects(projects.filter(project => 
-      project.name.toLowerCase().includes(filter.toLowerCase())
-    ));
-  }, [filter, filteredProjects]);
+    setFilteredProjects(
+      projects.filter((project) =>
+        project.name.toLowerCase().includes(filter.toLowerCase())
+      )
+    );
+  }, [filter, projects]); // ✅ also fixed dependency array
 
   const renderTable = (status: string) => {
+    const projectsByStatus = filteredProjects.filter(
+      (project) => project.status === status
+    );
+
+    if (projectsByStatus.length === 0) {
+      return <p>No projects found with status "{status}".</p>;
+    }
+
     return (
       <table>
         <thead>
@@ -38,7 +49,7 @@ export function App(props) {
           </tr>
         </thead>
         <tbody>
-          {filteredProjects.map((project) => (
+          {projectsByStatus.map((project) => (
             <tr key={project.projSerialNumber}>
               <td>{project.projSerialNumber}</td>
               <td>{project.jobNumber}</td>
@@ -49,14 +60,14 @@ export function App(props) {
         </tbody>
       </table>
     );
-  }
+  };
 
   return (
-    <div className='App'>
-      <input 
-        type="text" 
-        value={filter} 
-        onChange={(e) => setFilter(e.target.value)} 
+    <div className="App">
+      <input
+        type="text"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter projects"
       />
       <h2>Status: {props.status}</h2>
