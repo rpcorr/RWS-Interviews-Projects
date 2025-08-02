@@ -1,0 +1,14 @@
+SELECT
+	p.Name AS projectname,
+ 	c.Name AS contractorname,
+	SUM(i.InvoiceValue) AS total_invoice_value
+FROM
+	Invoices i
+JOIN
+	ProjectInfo p ON i.ProjectId = p.ProjectId
+JOIN
+	ContractorInfo c ON p.ContractorId = c.ContractorId
+GROUP BY
+	p.Name, c.Name
+ORDER BY
+	p.Name;
